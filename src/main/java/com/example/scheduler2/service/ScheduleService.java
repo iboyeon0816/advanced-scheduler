@@ -41,6 +41,7 @@ public class ScheduleService {
         schedule.update(updateDto.getTitle(), updateDto.getContents());
     }
 
+    @Transactional
     public void deleteSchedule(Long scheduleId) {
         Schedule schedule = OptionalUtils.getOrThrowNotFound(scheduleRepository.findById(scheduleId));
         scheduleRepository.delete(schedule);

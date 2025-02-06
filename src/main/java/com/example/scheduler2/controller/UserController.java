@@ -55,4 +55,15 @@ public class UserController {
         UserDetailDto resultDto = userService.findUser(sessionDto.getUserId());
         return ResponseEntity.ok(resultDto);
     }
+
+    @DeleteMapping("/users")
+    public ResponseEntity<UserDetailDto> deleteUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        UserSessionDto sessionDto = (UserSessionDto) session.getAttribute(SessionConst.LOGIN_USER);
+
+        userService.deleteUser(sessionDto.getUserId());
+        session.invalidate();
+
+        return ResponseEntity.noContent().build();
+    }
 }

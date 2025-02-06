@@ -41,6 +41,12 @@ public class UserService {
         return new UserDetailDto(user);
     }
 
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = OptionalUtils.getOrThrowNotFound(userRepository.findById(userId));
+        userRepository.delete(user);
+    }
+
     private void checkNotDuplicatedEmail(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
