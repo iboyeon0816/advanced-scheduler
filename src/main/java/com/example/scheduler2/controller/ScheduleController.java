@@ -2,15 +2,13 @@ package com.example.scheduler2.controller;
 
 import com.example.scheduler2.dto.ScheduleRequestDto.CreateScheduleDto;
 import com.example.scheduler2.dto.ScheduleResponseDto.CreateScheduleResultDto;
+import com.example.scheduler2.dto.ScheduleResponseDto.FindScheduleResultDto;
 import com.example.scheduler2.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/schedules")
@@ -25,4 +23,9 @@ public class ScheduleController {
         return new ResponseEntity<>(resultDto, HttpStatus.CREATED);
     }
 
+    @GetMapping("/{scheduleId}")
+    public ResponseEntity<FindScheduleResultDto> findSchedule(@PathVariable Long scheduleId) {
+        FindScheduleResultDto resultDto = scheduleService.findById(scheduleId);
+        return ResponseEntity.ok(resultDto);
+    }
 }
