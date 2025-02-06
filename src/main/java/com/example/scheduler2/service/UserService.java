@@ -36,6 +36,11 @@ public class UserService {
         return new UserSessionDto(user);
     }
 
+    public UserDetailDto findUser(Long userId) {
+        User user = OptionalUtils.getOrThrowNotFound(userRepository.findById(userId));
+        return new UserDetailDto(user);
+    }
+
     private void checkNotDuplicatedEmail(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
