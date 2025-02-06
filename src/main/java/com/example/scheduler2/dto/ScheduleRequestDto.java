@@ -21,4 +21,15 @@ public class ScheduleRequestDto {
         @Size(max = 100)
         private final String contents;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class UpdateScheduleDto {
+        @NotBlank
+        @Size(max = 30)
+        private final String title;
+
+        @Size(max = 100)
+        private final String contents;
+    }
 }
