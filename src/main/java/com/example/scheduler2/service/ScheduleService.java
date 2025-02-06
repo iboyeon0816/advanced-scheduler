@@ -5,14 +5,12 @@ import com.example.scheduler2.dto.ScheduleRequestDto.CreateScheduleDto;
 import com.example.scheduler2.dto.ScheduleRequestDto.UpdateScheduleDto;
 import com.example.scheduler2.dto.ScheduleResponseDto.ScheduleDetailDto;
 import com.example.scheduler2.repository.ScheduleRepository;
+import com.example.scheduler2.util.OptionalUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +25,7 @@ public class ScheduleService {
     }
 
     public ScheduleDetailDto findSchedule(Long scheduleId) {
-        Schedule schedule = getOrThrow(scheduleRepository.findById(scheduleId));
+        Schedule schedule = OptionalUtils.getOrThrowNotFound(scheduleRepository.findById(scheduleId));
         return new ScheduleDetailDto(schedule);
     }
 
@@ -39,16 +37,12 @@ public class ScheduleService {
 
     @Transactional
     public void updateSchedule(Long scheduleId, UpdateScheduleDto updateDto) {
-        Schedule schedule = getOrThrow(scheduleRepository.findById(scheduleId));
+        Schedule schedule = OptionalUtils.getOrThrowNotFound(scheduleRepository.findById(scheduleId));
         schedule.update(updateDto.getTitle(), updateDto.getContents());
     }
 
     public void deleteSchedule(Long scheduleId) {
-        Schedule schedule = getOrThrow(scheduleRepository.findById(scheduleId));
+        Schedule schedule = OptionalUtils.getOrThrowNotFound(scheduleRepository.findById(scheduleId));
         scheduleRepository.delete(schedule);
-    }
-
-    public <T> T getOrThrow(Optional<T> entity) {
-        return entity.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 }

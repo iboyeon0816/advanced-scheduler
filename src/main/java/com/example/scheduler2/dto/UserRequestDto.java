@@ -23,4 +23,17 @@ public class UserRequestDto {
         @Size(max = 20)
         private final String password;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class LoginDto {
+        @NotBlank
+        @Size(max = 20)
+        @Email
+        private final String email;
+
+        @NotBlank
+        @Size(max = 20)
+        private final String password;
+    }
 }
