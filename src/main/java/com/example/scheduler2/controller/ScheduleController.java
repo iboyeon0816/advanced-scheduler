@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/schedules")
 @RequiredArgsConstructor
@@ -25,7 +27,13 @@ public class ScheduleController {
 
     @GetMapping("/{scheduleId}")
     public ResponseEntity<FindScheduleResultDto> findSchedule(@PathVariable Long scheduleId) {
-        FindScheduleResultDto resultDto = scheduleService.findById(scheduleId);
+        FindScheduleResultDto resultDto = scheduleService.findSchedule(scheduleId);
         return ResponseEntity.ok(resultDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<FindScheduleResultDto>> findAllSchedules() {
+        List<FindScheduleResultDto> resultDtos = scheduleService.findAllSchedules();
+        return ResponseEntity.ok(resultDtos);
     }
 }
