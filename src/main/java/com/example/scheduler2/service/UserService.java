@@ -21,7 +21,7 @@ public class UserService {
 
     @Transactional
     public UserDetailDto signup(SignUpDto signUpDto) {
-        checkNotDuplicatedEmail(signUpDto.getName());
+        checkNotDuplicatedEmail(signUpDto.getEmail());
 
         User user = new User(signUpDto);
         userRepository.save(user);
