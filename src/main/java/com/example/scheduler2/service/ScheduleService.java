@@ -43,6 +43,11 @@ public class ScheduleService {
         schedule.update(updateDto.getTitle(), updateDto.getContents());
     }
 
+    public void deleteSchedule(Long scheduleId) {
+        Schedule schedule = getOrThrow(scheduleRepository.findById(scheduleId));
+        scheduleRepository.delete(schedule);
+    }
+
     public <T> T getOrThrow(Optional<T> entity) {
         return entity.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
