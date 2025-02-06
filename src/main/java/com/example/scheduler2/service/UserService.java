@@ -3,6 +3,7 @@ package com.example.scheduler2.service;
 import com.example.scheduler2.domain.User;
 import com.example.scheduler2.dto.UserRequestDto.LoginDto;
 import com.example.scheduler2.dto.UserRequestDto.SignUpDto;
+import com.example.scheduler2.dto.UserRequestDto.UpdateUserDto;
 import com.example.scheduler2.dto.UserResponseDto.UserDetailDto;
 import com.example.scheduler2.dto.UserSessionDto;
 import com.example.scheduler2.repository.UserRepository;
@@ -39,6 +40,12 @@ public class UserService {
     public UserDetailDto findUser(Long userId) {
         User user = OptionalUtils.getOrThrowNotFound(userRepository.findById(userId));
         return new UserDetailDto(user);
+    }
+
+    @Transactional
+    public void updateUser(Long userId, UpdateUserDto updateDto) {
+        User user = OptionalUtils.getOrThrowNotFound(userRepository.findById(userId));
+        user.setPassword(updateDto.getPassword());
     }
 
     @Transactional

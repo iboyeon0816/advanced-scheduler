@@ -28,4 +28,8 @@ public class User extends BaseEntity {
         this.email = signUpDto.getEmail();
         this.password = signUpDto.getPassword();
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

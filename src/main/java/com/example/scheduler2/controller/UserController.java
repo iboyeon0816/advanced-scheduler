@@ -3,6 +3,7 @@ package com.example.scheduler2.controller;
 import com.example.scheduler2.auth.SessionConst;
 import com.example.scheduler2.dto.UserRequestDto.LoginDto;
 import com.example.scheduler2.dto.UserRequestDto.SignUpDto;
+import com.example.scheduler2.dto.UserRequestDto.UpdateUserDto;
 import com.example.scheduler2.dto.UserResponseDto.UserDetailDto;
 import com.example.scheduler2.dto.UserSessionDto;
 import com.example.scheduler2.service.UserService;
@@ -52,6 +53,16 @@ public class UserController {
     public ResponseEntity<UserDetailDto> findUser(
             @SessionAttribute(name = SessionConst.LOGIN_USER) UserSessionDto sessionDto
     ) {
+        UserDetailDto resultDto = userService.findUser(sessionDto.getUserId());
+        return ResponseEntity.ok(resultDto);
+    }
+
+    @PatchMapping("/users")
+    public ResponseEntity<UserDetailDto> updateUser(
+            @SessionAttribute(name = SessionConst.LOGIN_USER) UserSessionDto sessionDto,
+            @Valid @RequestBody UpdateUserDto updateDto
+    ) {
+        userService.updateUser(sessionDto.getUserId(), updateDto);
         UserDetailDto resultDto = userService.findUser(sessionDto.getUserId());
         return ResponseEntity.ok(resultDto);
     }

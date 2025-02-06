@@ -36,4 +36,12 @@ public class UserRequestDto {
         @Size(max = 20)
         private final String password;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class UpdateUserDto {
+        @NotBlank
+        @Size(max = 20)
+        private final String password;
+    }
 }
