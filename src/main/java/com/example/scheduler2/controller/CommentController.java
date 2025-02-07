@@ -59,4 +59,14 @@ public class CommentController {
         CommentDetailDto resultDto = commentService.findComment(commentId);
         return ResponseEntity.ok(resultDto);
     }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(
+            @SessionAttribute(name = SessionConst.LOGIN_USER) UserSessionDto sessionDto,
+            @PathVariable Long scheduleId,
+            @PathVariable Long commentId
+    ) {
+        commentService.deleteComment(sessionDto.getUserId(), scheduleId, commentId);
+        return ResponseEntity.noContent().build();
+    }
 }

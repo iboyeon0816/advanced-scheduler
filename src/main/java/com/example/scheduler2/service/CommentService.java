@@ -69,6 +69,16 @@ public class CommentService {
         comment.setContents(updateDto.getContents());
     }
 
+    @Transactional
+    public void deleteComment(Long userId, Long scheduleId, Long commentId) {
+        Comment comment = commentRepository.findByIdOrThrowNotFound(commentId);
+
+        checkScheduleIdMatch(comment.getSchedule().getId(), scheduleId);
+        checkCommentAuthor(userId, comment.getUser());
+
+        commentRepository.delete(comment);
+    }
+
     private void checkScheduleIdMatch(Long scheduleId, Long inputScheduleId) {
         if (!scheduleId.equals(inputScheduleId)) {
             String message = String.format("The comment does not belong to the schedule (ID: %s)", inputScheduleId);
