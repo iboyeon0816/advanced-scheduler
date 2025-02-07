@@ -6,6 +6,7 @@ import com.example.scheduler2.dto.ScheduleRequestDto.CreateScheduleDto;
 import com.example.scheduler2.dto.ScheduleRequestDto.UpdateScheduleDto;
 import com.example.scheduler2.dto.ScheduleResponseDto.ScheduleDetailDto;
 import com.example.scheduler2.exception.ex.ForbiddenException;
+import com.example.scheduler2.repository.CommentRepository;
 import com.example.scheduler2.repository.ScheduleRepository;
 import com.example.scheduler2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,24 +21,24 @@ public class ScheduleService {
 
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
+    private final CommentRepository commentRepository;
 
     public ScheduleDetailDto createSchedule(Long userId, CreateScheduleDto createDto) {
         User user = userRepository.findByIdOrThrowNotFound(userId);
         Schedule schedule = new Schedule(createDto);
         schedule.setUser(user);
         scheduleRepository.save(schedule);
-        return new ScheduleDetailDto(schedule);
+        return new ScheduleDetailDto(schedule, 0L);
     }
 
     public ScheduleDetailDto findSchedule(Long scheduleId) {
         Schedule schedule = scheduleRepository.findByIdOrThrowNotFound(scheduleId);
-        return new ScheduleDetailDto(schedule);
+        Long commentCount = commentRepository.countByScheduleId(scheduleId);
+        return new ScheduleDetailDto(schedule, commentCount);
     }
 
     public List<ScheduleDetailDto> findAllSchedules() {
-        return scheduleRepository.findAll().stream()
-                .map(ScheduleDetailDto::new)
-                .toList();
+        return scheduleRepository.findAllDtos();
     }
 
     @Transactional

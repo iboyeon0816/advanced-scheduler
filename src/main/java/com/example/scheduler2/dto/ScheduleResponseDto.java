@@ -15,14 +15,16 @@ public class ScheduleResponseDto {
         private final String contents;
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
+        private final Long commentCount;
 
-        public ScheduleDetailDto(Schedule schedule) {
+        public ScheduleDetailDto(Schedule schedule, Long commentCount) {
             this.scheduleId = schedule.getId();
             this.authorName = (schedule.getUser() != null) ? schedule.getUser().getName() : null;
             this.title = schedule.getTitle();
             this.contents = schedule.getContents();
             this.createdAt = schedule.getCreatedAt();
             this.updatedAt = schedule.getUpdatedAt();
+            this.commentCount = commentCount;
         }
     }
 }
