@@ -1,5 +1,6 @@
 package com.example.scheduler2.service;
 
+import com.example.scheduler2.config.PasswordEncoder;
 import com.example.scheduler2.domain.User;
 import com.example.scheduler2.dto.UserRequestDto.LoginDto;
 import com.example.scheduler2.dto.UserRequestDto.SignUpDto;
@@ -18,12 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserDetailDto signup(SignUpDto signUpDto) {
         checkNotDuplicatedEmail(signUpDto.getEmail());
 
-        User user = new User(signUpDto);
+        String encodedPassword = passwordEncoder.encode(signUpDto.getPassword());
+        User user = new User(signUpDto.getName(), signUpDto.getEmail(), encodedPassword);
         userRepository.save(user);
         return new UserDetailDto(user);
     }
@@ -58,8 +61,8 @@ public class UserService {
         }
     }
 
-    private static void checkPassword(String password, String inputPassword) {
-        if (!password.equals(inputPassword)) {
+    private void checkPassword(String password, String inputPassword) {
+        if (!passwordEncoder.matches(inputPassword, password)) {
             throw new UnauthorizedException("Invalid email or password");
         }
     }

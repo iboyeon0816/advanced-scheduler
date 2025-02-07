@@ -1,7 +1,6 @@
 package com.example.scheduler2.domain;
 
 import com.example.scheduler2.domain.common.BaseEntity;
-import com.example.scheduler2.dto.UserRequestDto.SignUpDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,16 +16,16 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 10)
     private String name;
 
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(nullable = false, unique = true, length = 30)
     private String email;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     private String password;
 
-    public User(SignUpDto signUpDto) {
-        this.name = signUpDto.getName();
-        this.email = signUpDto.getEmail();
-        this.password = signUpDto.getPassword();
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
     public void setPassword(String password) {

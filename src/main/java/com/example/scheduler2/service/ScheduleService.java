@@ -54,7 +54,7 @@ public class ScheduleService {
         scheduleRepository.delete(schedule);
     }
 
-    private static void checkScheduleAuthor(Long userId, User author) {
+    private void checkScheduleAuthor(Long userId, User author) {
         if (author == null || !userId.equals(author.getId())) {
             throw new ForbiddenException("schedule");
         }
