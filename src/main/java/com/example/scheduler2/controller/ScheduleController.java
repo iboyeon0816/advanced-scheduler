@@ -1,8 +1,10 @@
 package com.example.scheduler2.controller;
 
+import com.example.scheduler2.auth.SessionConst;
 import com.example.scheduler2.dto.ScheduleRequestDto.CreateScheduleDto;
 import com.example.scheduler2.dto.ScheduleRequestDto.UpdateScheduleDto;
 import com.example.scheduler2.dto.ScheduleResponseDto.ScheduleDetailDto;
+import com.example.scheduler2.dto.UserSessionDto;
 import com.example.scheduler2.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +22,11 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    public ResponseEntity<ScheduleDetailDto> createSchedule(@Valid @RequestBody CreateScheduleDto createDto) {
-        ScheduleDetailDto resultDto = scheduleService.createSchedule(createDto);
+    public ResponseEntity<ScheduleDetailDto> createSchedule(
+            @SessionAttribute(name = SessionConst.LOGIN_USER) UserSessionDto sessionDto,
+            @Valid @RequestBody CreateScheduleDto createDto
+    ) {
+        ScheduleDetailDto resultDto = scheduleService.createSchedule(sessionDto.getUserId(), createDto);
         return new ResponseEntity<>(resultDto, HttpStatus.CREATED);
     }
 
@@ -38,16 +43,22 @@ public class ScheduleController {
     }
 
     @PatchMapping("/{scheduleId}")
-    public ResponseEntity<ScheduleDetailDto> updateSchedule(@PathVariable Long scheduleId,
-                                                            @Valid @RequestBody UpdateScheduleDto updateDto) {
-        scheduleService.updateSchedule(scheduleId, updateDto);
+    public ResponseEntity<ScheduleDetailDto> updateSchedule(
+            @SessionAttribute(name = SessionConst.LOGIN_USER) UserSessionDto sessionDto,
+            @PathVariable Long scheduleId,
+            @Valid @RequestBody UpdateScheduleDto updateDto
+    ) {
+        scheduleService.updateSchedule(sessionDto.getUserId(), scheduleId, updateDto);
         ScheduleDetailDto resultDto = scheduleService.findSchedule(scheduleId);
         return ResponseEntity.ok(resultDto);
     }
 
     @DeleteMapping("/{scheduleId}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long scheduleId) {
-        scheduleService.deleteSchedule(scheduleId);
+    public ResponseEntity<Void> deleteSchedule(
+            @SessionAttribute(name = SessionConst.LOGIN_USER) UserSessionDto sessionDto,
+            @PathVariable Long scheduleId
+    ) {
+        scheduleService.deleteSchedule(sessionDto.getUserId(), scheduleId);
         return ResponseEntity.noContent().build();
     }
 }
