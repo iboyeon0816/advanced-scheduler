@@ -12,7 +12,6 @@ public class CommentResponseDto {
     @AllArgsConstructor
     public static class CommentDetailDto {
         private final Long commentId;
-        private final Long scheduleId;
         private final String authorName;
         private final String contents;
         private final LocalDateTime createdAt;
@@ -20,7 +19,6 @@ public class CommentResponseDto {
 
         public CommentDetailDto(Comment comment) {
             this.commentId = comment.getId();
-            this.scheduleId = comment.getSchedule().getId();
             this.authorName = comment.getUser().getName();
             this.contents = comment.getContents();
             this.createdAt = comment.getCreatedAt();

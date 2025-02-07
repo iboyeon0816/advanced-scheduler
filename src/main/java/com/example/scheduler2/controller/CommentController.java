@@ -27,4 +27,11 @@ public class CommentController {
         CommentDetailDto resultDto = commentService.createComment(sessionDto.getUserId(), scheduleId, createDto);
         return new ResponseEntity<>(resultDto, HttpStatus.CREATED);
     }
+
+    @GetMapping("/{commentId}")
+    public ResponseEntity<CommentDetailDto> findComment(@PathVariable Long scheduleId,
+                                                        @PathVariable Long commentId) {
+        CommentDetailDto resultDto = commentService.findComment(scheduleId, commentId);
+        return new ResponseEntity<>(resultDto, HttpStatus.CREATED);
+    }
 }
