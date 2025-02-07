@@ -5,15 +5,18 @@ import com.example.scheduler2.domain.User;
 import com.example.scheduler2.dto.ScheduleRequestDto.CreateScheduleDto;
 import com.example.scheduler2.dto.ScheduleRequestDto.UpdateScheduleDto;
 import com.example.scheduler2.dto.ScheduleResponseDto.ScheduleDetailDto;
+import com.example.scheduler2.dto.ScheduleResponseDto.SchedulePageDto;
 import com.example.scheduler2.exception.ex.ForbiddenException;
 import com.example.scheduler2.repository.CommentRepository;
 import com.example.scheduler2.repository.ScheduleRepository;
 import com.example.scheduler2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +40,12 @@ public class ScheduleService {
         return new ScheduleDetailDto(schedule, commentCount);
     }
 
-    public List<ScheduleDetailDto> findAllSchedules() {
-        return scheduleRepository.findAllDtos();
+    public SchedulePageDto findAllSchedules(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(
+                page - 1, size, Sort.by(Sort.Direction.DESC, "updatedAt")
+        );
+        Page<ScheduleDetailDto> schedulePage = scheduleRepository.findAllDtos(pageable);
+        return new SchedulePageDto(schedulePage);
     }
 
     @Transactional

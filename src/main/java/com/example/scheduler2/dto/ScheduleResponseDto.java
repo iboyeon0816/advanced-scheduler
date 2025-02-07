@@ -2,8 +2,10 @@ package com.example.scheduler2.dto;
 
 import com.example.scheduler2.domain.Schedule;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ScheduleResponseDto {
 
@@ -25,6 +27,23 @@ public class ScheduleResponseDto {
             this.createdAt = schedule.getCreatedAt();
             this.updatedAt = schedule.getUpdatedAt();
             this.commentCount = commentCount;
+        }
+    }
+
+    @Getter
+    public static class SchedulePageDto {
+        private final Integer totalPages;
+        private final Long totalElements;
+        private final Boolean isFirst;
+        private final Boolean isLast;
+        private final List<ScheduleDetailDto> data;
+
+        public SchedulePageDto(Page<ScheduleDetailDto> schedulePage) {
+            this.totalPages = schedulePage.getTotalPages();
+            this.totalElements = schedulePage.getTotalElements();
+            this.isFirst = schedulePage.isFirst();
+            this.isLast = schedulePage.isLast();
+            this.data = schedulePage.getContent();
         }
     }
 }
