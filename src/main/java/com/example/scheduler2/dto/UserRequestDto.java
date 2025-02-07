@@ -2,6 +2,7 @@ package com.example.scheduler2.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +30,10 @@ public class UserRequestDto {
     public static class LoginDto {
         @NotBlank
         @Size(max = 20)
-        @Email
+        @Pattern(
+                regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+                message = "이메일 형식이어야 합니다"
+        )
         private final String email;
 
         @NotBlank
