@@ -13,4 +13,12 @@ public class CommentRequestDto {
         @NotBlank
         private final String contents;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class UpdateCommentDto {
+        @Size(max = 100)
+        @NotBlank
+        private final String contents;
+    }
 }

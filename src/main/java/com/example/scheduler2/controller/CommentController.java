@@ -2,6 +2,7 @@ package com.example.scheduler2.controller;
 
 import com.example.scheduler2.auth.SessionConst;
 import com.example.scheduler2.dto.CommentRequestDto.CreateCommentDto;
+import com.example.scheduler2.dto.CommentRequestDto.UpdateCommentDto;
 import com.example.scheduler2.dto.CommentResponseDto.CommentDetailDto;
 import com.example.scheduler2.dto.CommentResponseDto.CommentPageDto;
 import com.example.scheduler2.dto.UserSessionDto;
@@ -44,6 +45,18 @@ public class CommentController {
             @RequestParam(defaultValue = "10") @Min(1) Integer size
     ) {
         CommentPageDto resultDto = commentService.findAllComments(scheduleId, page, size);
+        return ResponseEntity.ok(resultDto);
+    }
+
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<CommentDetailDto> updateComment(
+            @SessionAttribute(name = SessionConst.LOGIN_USER) UserSessionDto sessionDto,
+            @PathVariable Long scheduleId,
+            @PathVariable Long commentId,
+            @Valid @RequestBody UpdateCommentDto updateDto
+    ) {
+        commentService.updateComment(sessionDto.getUserId(), scheduleId, commentId, updateDto);
+        CommentDetailDto resultDto = commentService.findComment(commentId);
         return ResponseEntity.ok(resultDto);
     }
 }

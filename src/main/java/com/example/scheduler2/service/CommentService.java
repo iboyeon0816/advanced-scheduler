@@ -4,9 +4,11 @@ import com.example.scheduler2.domain.Comment;
 import com.example.scheduler2.domain.Schedule;
 import com.example.scheduler2.domain.User;
 import com.example.scheduler2.dto.CommentRequestDto.CreateCommentDto;
+import com.example.scheduler2.dto.CommentRequestDto.UpdateCommentDto;
 import com.example.scheduler2.dto.CommentResponseDto.CommentDetailDto;
 import com.example.scheduler2.dto.CommentResponseDto.CommentPageDto;
 import com.example.scheduler2.exception.ex.BadRequestException;
+import com.example.scheduler2.exception.ex.ForbiddenException;
 import com.example.scheduler2.repository.CommentRepository;
 import com.example.scheduler2.repository.ScheduleRepository;
 import com.example.scheduler2.repository.UserRepository;
@@ -38,6 +40,11 @@ public class CommentService {
         return new CommentDetailDto(comment);
     }
 
+    public CommentDetailDto findComment(Long commentId) {
+        Comment comment = commentRepository.findByIdOrThrowNotFound(commentId);
+        return new CommentDetailDto(comment);
+    }
+
     public CommentDetailDto findComment(Long scheduleId, Long commentId) {
         Comment comment = commentRepository.findByIdOrThrowNotFound(commentId);
         checkScheduleIdMatch(comment.getSchedule().getId(), scheduleId);
@@ -52,10 +59,26 @@ public class CommentService {
         return new CommentPageDto(commentPage);
     }
 
+    @Transactional
+    public void updateComment(Long userId, Long scheduleId, Long commentId, UpdateCommentDto updateDto) {
+        Comment comment = commentRepository.findByIdOrThrowNotFound(commentId);
+
+        checkScheduleIdMatch(comment.getSchedule().getId(), scheduleId);
+        checkCommentAuthor(userId, comment.getUser());
+
+        comment.setContents(updateDto.getContents());
+    }
+
     private void checkScheduleIdMatch(Long scheduleId, Long inputScheduleId) {
         if (!scheduleId.equals(inputScheduleId)) {
             String message = String.format("The comment does not belong to the schedule (ID: %s)", inputScheduleId);
             throw new BadRequestException(message);
+        }
+    }
+
+    private void checkCommentAuthor(Long userId, User author) {
+        if (author == null || !userId.equals(author.getId())) {
+            throw new ForbiddenException("Comment");
         }
     }
 }
