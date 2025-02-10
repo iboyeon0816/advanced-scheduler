@@ -14,9 +14,16 @@ import org.springframework.util.PatternMatchUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * 모든 요청에 대해 사용자의 인증 여부를 검사하는 필터이다.
+ *
+ * 화이트리스트에 포함된 경로에 대해서는 인증 검사를 수행하지 않으며,
+ * 이외에는 세션 정보를 확인하여 인증되지 않은 경우 401 응답을 반환한다.
+ */
 @RequiredArgsConstructor
 public class LoginFilter implements Filter {
 
+    // 인증이 필요하지 않은 요청 URI 목록
     private static final String[] WHITE_LIST = { "/signup" , "/login" };
 
     private final ObjectMapper objectMapper;
@@ -30,6 +37,7 @@ public class LoginFilter implements Filter {
         if (!inWhiteList(requestURI)) { // 인증 필요
             HttpSession session = httpRequest.getSession(false);
 
+            // 인증 실패 시 401 응답 반환
             if (session == null || session.getAttribute(SessionConst.LOGIN_USER) == null) {
                 httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 httpResponse.setCharacterEncoding(StandardCharsets.UTF_8.name());
@@ -41,6 +49,7 @@ public class LoginFilter implements Filter {
             }
         }
 
+        // 인증 완료 시 다음 필터로 요청 전달
         chain.doFilter(request, response);
     }
 
