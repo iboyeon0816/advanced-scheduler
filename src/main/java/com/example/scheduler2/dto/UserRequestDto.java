@@ -48,6 +48,10 @@ public class UserRequestDto {
     public static class UpdateUserDto {
         @NotBlank
         @Size(max = 20)
-        private final String password;
+        private final String currentPassword;
+
+        @NotBlank
+        @Size(max = 20)
+        private final String newPassword;
     }
 }

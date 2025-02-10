@@ -46,7 +46,10 @@ public class UserService {
     @Transactional
     public void updateUser(Long userId, UpdateUserDto updateDto) {
         User user = userRepository.findByIdOrThrowNotFound(userId);
-        user.setPassword(updateDto.getPassword());
+        checkPassword(user.getPassword(), updateDto.getCurrentPassword());
+
+        String encodedPassword = passwordEncoder.encode(updateDto.getNewPassword());
+        user.setPassword(encodedPassword);
     }
 
     @Transactional
